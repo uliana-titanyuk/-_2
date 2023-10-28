@@ -2,7 +2,6 @@
 #include<iostream>
 #include<cmath>
 
-
 double V[1000000];
 double Vup[1000000];
 double V_right[1000000];
@@ -186,10 +185,11 @@ int calculate_linear_explicit_write_file_local(FILE* file_table, int Ntau, int M
     return 0;
 }
 
-int sweep(double tau, double h, int N, double* V_right, double* Vup)
+int sweep(double tau, double h, const int N, double* V_right, double* Vup)
 {
-    double A[N];
-    double B[N];
+   double* A = new double[N];
+   double* B = new double[N];
+    
 
     double mu = tau / (4. * h);
 
@@ -211,6 +211,8 @@ int sweep(double tau, double h, int N, double* V_right, double* Vup)
     {
         Vup[i] = A[i + 1] * Vup[i + 1] + B[i + 1];
     }
+    delete[] A;
+    delete[] B;
     return 0;
 }
 
@@ -369,7 +371,7 @@ int calculate_linear_implicit_write_file_local(FILE* file_table, int Ntau, int M
         Delta_V_L1h = Delta_V_L1h * h;
         V_L1h = V_L1h * h;
 
-        fprintf(file_table, "\hline %f & %f & %e & %e & %e & %e \\ \n", tau_tmp, h_tmp, Delta_V_Ch, Delta_V_L1h, Delta_V_Ch / V_Ch, Delta_V_L1h / V_L1h);
+        fprintf(file_table, "\nline %f & %f & %e & %e & %e & %e \\ \n", tau_tmp, h_tmp, Delta_V_Ch, Delta_V_L1h, Delta_V_Ch / V_Ch, Delta_V_L1h / V_L1h);
 
     }
 
@@ -441,7 +443,7 @@ int calculate_nonlinear_explicit_write_file(FILE* file, FILE* file_table, int Nt
     write_vector_file(file, Vup, Mh + 1);
     write_vector_file(file, V, Mh + 1);
 
-    fprintf(file_table, "\\hline %.3f & %.3f & %e & %e & %e & %e  \\\ \n", tau, h, Delta_V_Ch, Delta_V_L1h, Delta_V_Ch / V_Ch, Delta_V_L1h / V_L1h);
+    fprintf(file_table, "\\hline %.3f & %.3f & %e & %e & %e & %e  \\ \n", tau, h, Delta_V_Ch, Delta_V_L1h, Delta_V_Ch / V_Ch, Delta_V_L1h / V_L1h);
     return 0;
 }
 
@@ -552,8 +554,9 @@ double F_d(double v) { return -v; }
 
 int gn_sweep(int N, double* V_right, double* Vup_g)
 {
-    double A[N];
-    double B[N];
+    double* A = new double[N];
+    double* B = new double[N];
+
 
     A[0] = 0.;
     A[1] = -beta[0];
@@ -573,6 +576,8 @@ int gn_sweep(int N, double* V_right, double* Vup_g)
     {
         Vup_g[i] = A[i + 1] * Vup_g[i + 1] + B[i + 1];
     }
+    delete[] A;
+    delete[] B;
     return 0;
 }
 
@@ -682,14 +687,20 @@ int main(void)
     //FILE* file9=fopen("t6_t.txt","w");
     //FILE* file10=fopen("t7_t.txt","w");
     //FILE* file11=fopen("t8_t.txt","w");
-    //FILE* file12=fopen("t9_t.txt","w");
+    //FILE* file12=fopen("t9_t.txt");
 
-    FILE* File1 = fopen("t10.txt", "w");
-    FILE* File2 = fopen("t10_t.txt", "w");
-    FILE* File3 = fopen("t11_t.txt", "w");
-    FILE* File4 = fopen("t12_t.txt", "w");
-    FILE* File5 = fopen("t13.txt", "w");
-    FILE* File6 = fopen("t13_t.txt", "w");
+    FILE* File1;
+    fopen_s(&File1,"t10.txt", "w");
+    FILE* File2;
+    fopen_s(&File2, "t10.txt", "w");
+    FILE* File3;
+    fopen_s(&File3, "t10.txt", "w");
+    FILE* File4;
+    fopen_s(&File4, "t10.txt", "w");
+    FILE* File5;
+    fopen_s(&File5, "t10.txt", "w");
+    FILE* File6;
+    fopen_s(&File6, "t10.txt", "w");
 
     /* // Расчет линейной задачи с явной схемой
 
