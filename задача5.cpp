@@ -605,7 +605,7 @@ int method_Newton(int Ntau, int Mh, double tol, double w)
         for (int i = 0; i < Mh - 1; i++)V_right[i] = -V_right[i];
 
         alpha[0] = 0;
-        for (int i = 0; i < Mh - 1; i++) { alpha[i] = -nu / 2 * F_d(Vup_cr[i - 1]); }
+        for (int i = 1; i < Mh - 1; i++) { alpha[i] = -nu / 2 * F_d(Vup_cr[i - 1]); }
 
         for (int i = 0; i < Mh - 2; i++) { beta[i] = nu / 2 * F_d(Vup_cr[i + 1]); }
         beta[Mh - 2] = 0;
@@ -676,18 +676,31 @@ int calculate_nonlinear_implicit_write_file(FILE* file, FILE* file_table, int Nt
 
 int main(void)
 {
-    //FILE* file1=fopen("t1.txt","w");
-    //FILE* file2=fopen("t1_t.txt","w");
-    //FILE* file3=fopen("t2.txt","w");
-    //FILE* file4=fopen("t2_t.txt","w");
-    //FILE* file5=fopen("t3.txt","w");
-    //FILE* file6=fopen("t3_t.txt","w");
-    //FILE* file7=fopen("t4_t.txt","w");
-    //FILE* file8=fopen("t5_t.txt","w");
-    //FILE* file9=fopen("t6_t.txt","w");
-    //FILE* file10=fopen("t7_t.txt","w");
-    //FILE* file11=fopen("t8_t.txt","w");
-    //FILE* file12=fopen("t9_t.txt");
+    //FILE* File1;
+   // fopen_s(&File1, "t1.txt", "w");
+    //FILE* File2;
+    //fopen_s(&File2, "t1_t.txt", "w");
+    //FILE* File3;
+    //fopen_s(&File3, "t2.txt", "w");
+    //FILE* File4;
+    //fopen_s(&File4, ""t2_t.txt", "w");
+    //FILE* File5;
+    //fopen_s(&File5, "t3.txt", "w");
+    //FILE* File6;
+    //fopen_s(&File6, "t3_t.txt", "w");
+    //FILE* File1;
+    //fopen_s(&File1, "t4_t.txt", "w");
+    //FILE* File2;
+    //fopen_s(&File2, "t5_t.txt","w");
+    //FILE* File3;
+    //fopen_s(&File3, "t6_t.txt","w");
+    //FILE* File4;
+    //fopen_s(&File4, "t7_t.txt","w");
+    //FILE* File5;
+    //fopen_s(&File5, "t8_t.txt","w");
+    //FILE* File6;
+    //fopen_s(&File6, "t9_t.txt") ;
+   
 
     FILE* File1;
     fopen_s(&File1,"t10.txt", "w");
