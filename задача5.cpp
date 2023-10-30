@@ -311,15 +311,16 @@ int calculate_linear_implicit_write_file_local(FILE* file_table, int Ntau, int M
     }
     int Mh_tmp = Mh;
     int Ntau_tmp = Ntau;
-    int n = 1;
+    int s = 1;
+    printf( "nachS= %f \n", s);
 
     for (int k = 0; k < K; k++)
     {
-
+        
         Mh_tmp = Mh_tmp * 2;
         Ntau_tmp = Ntau_tmp * 2;
-        n = n * 2;
-
+        s = s + s;
+       // fprintf(file_table, "%f \n", s);
         double h_tmp = 2. / Mh_tmp;
         double tau_tmp = 1. / Ntau_tmp;
         double nu_tmp = tau_tmp / h_tmp;
@@ -357,22 +358,23 @@ int calculate_linear_implicit_write_file_local(FILE* file_table, int Ntau, int M
 
         for (int i = 0; i < Mh + 1; i++)
         {
-            if (fabs(V[i] - V_tmp[i * n]) > Delta_V_Ch)
+            if (fabs(V[i] - V_tmp[i * s]) > Delta_V_Ch)
             {
-                Delta_V_Ch = fabs(V[i] - V_tmp[i * n]);
+                Delta_V_Ch = fabs(V[i] - V_tmp[i * s]);
             }
             if (fabs(V[i]) > V_Ch)
             {
                 V_Ch = fabs(V[i]);
             }
-            Delta_V_L1h = Delta_V_L1h + fabs(V[i] - V_tmp[i * n]);
+            Delta_V_L1h = Delta_V_L1h + fabs(V[i] - V_tmp[i * s]);
             V_L1h = V_L1h + fabs(V[i]);
+            
         }
         Delta_V_L1h = Delta_V_L1h * h;
         V_L1h = V_L1h * h;
 
-        fprintf(file_table, "\nline %f & %f & %e & %e & %e & %e \\ \n", tau_tmp, h_tmp, Delta_V_Ch, Delta_V_L1h, Delta_V_Ch / V_Ch, Delta_V_L1h / V_L1h);
-
+        fprintf(file_table, "%f & %f & %e & %e & %e & %e \n", tau_tmp, h_tmp, Delta_V_Ch, Delta_V_L1h, Delta_V_Ch / V_Ch, Delta_V_L1h / V_L1h);
+        
     }
 
     return 0;
@@ -394,7 +396,7 @@ int calculate_nonlinear_explicit_write_file(FILE* file, FILE* file_table, int Nt
     double h = 2. / Mh;
     double tau = 1. / Ntau;
     double nu = tau / h;
-
+    
     for (int i = 0; i < Mh + 1; i++)
     {
         if (-1. + i * h <= 0) { V[i] = 0.; }
@@ -442,8 +444,8 @@ int calculate_nonlinear_explicit_write_file(FILE* file, FILE* file_table, int Nt
 
     write_vector_file(file, Vup, Mh + 1);
     write_vector_file(file, V, Mh + 1);
-
-    fprintf(file_table, "\\hline %.3f & %.3f & %e & %e & %e & %e  \\ \n", tau, h, Delta_V_Ch, Delta_V_L1h, Delta_V_Ch / V_Ch, Delta_V_L1h / V_L1h);
+    
+    fprintf(file_table, "%f %f %e %e %e %e \n", tau, h, Delta_V_Ch, Delta_V_L1h,Delta_V_Ch / V_Ch, Delta_V_L1h / V_L1h);
     return 0;
 }
 
@@ -536,11 +538,10 @@ int calculate_nonlinear_explicit_write_file_local(FILE* file_table, int Ntau, in
         Delta_V_L1h = Delta_V_L1h * h;
         V_L1h = V_L1h * h;
 
-        fprintf(file_table, "\\hline $v_1$ & %f & %f & %e & %e & %e & %e \\ \n", tau_tmp, h_tmp, Delta_V_Ch, Delta_V_L1h, Delta_V_Ch / V_Ch, Delta_V_L1h / V_L1h);
-
+       // fprintf(file_table, " $v_1$ & %f & %f & %e & %e & %e & %e \n", tau_tmp, h_tmp, Delta_V_Ch, Delta_V_L1h, Delta_V_Ch / V_Ch, Delta_V_L1h / V_L1h);
+        fprintf(file_table, " %f & %f & %e & %e & %e & %e \n", tau_tmp, h_tmp, Delta_V_Ch, Delta_V_L1h, Delta_V_Ch / V_Ch, Delta_V_L1h / V_L1h);
     }
-
-    return 0;
+        return 0;
 }
 
 
@@ -668,7 +669,7 @@ int calculate_nonlinear_implicit_write_file(FILE* file, FILE* file_table, int Nt
     write_vector_file(file, Vup, Mh + 1);
     write_vector_file(file, V, Mh + 1);
 
-    fprintf(file_table, "//hline %.3f & %.3f & %e & %e & %e & %e ///\n", tau, h, Delta_V_Ch, Delta_V_L1h, Delta_V_Ch / V_Ch, Delta_V_L1h / V_L1h);
+    fprintf(file_table, " %.3f & %.3f & %e & %e & %e & %e \n", tau, h, Delta_V_Ch, Delta_V_L1h, Delta_V_Ch / V_Ch, Delta_V_L1h / V_L1h);
     return 0;
 
 }
@@ -676,46 +677,46 @@ int calculate_nonlinear_implicit_write_file(FILE* file, FILE* file_table, int Nt
 
 int main(void)
 {
-    //FILE* File1;
-   // fopen_s(&File1, "t1.txt", "w");
-    //FILE* File2;
-    //fopen_s(&File2, "t1_t.txt", "w");
-    //FILE* File3;
-    //fopen_s(&File3, "t2.txt", "w");
-    //FILE* File4;
-    //fopen_s(&File4, ""t2_t.txt", "w");
-    //FILE* File5;
-    //fopen_s(&File5, "t3.txt", "w");
-    //FILE* File6;
-    //fopen_s(&File6, "t3_t.txt", "w");
-    //FILE* File1;
-    //fopen_s(&File1, "t4_t.txt", "w");
-    //FILE* File2;
-    //fopen_s(&File2, "t5_t.txt","w");
-    //FILE* File3;
-    //fopen_s(&File3, "t6_t.txt","w");
-    //FILE* File4;
-    //fopen_s(&File4, "t7_t.txt","w");
-    //FILE* File5;
-    //fopen_s(&File5, "t8_t.txt","w");
-    //FILE* File6;
-    //fopen_s(&File6, "t9_t.txt") ;
+   /* FILE* file1;
+    fopen_s(&file1, "t1.txt", "w");
+    FILE* file2;
+    fopen_s(&file2, "t1_t.txt", "w");
+    FILE * file7;
+    fopen_s(&file7, "t4_t.txt", "w");
+    FILE* file8;
+    fopen_s(&file8, "t5_t.txt","w");*/
+  /*  FILE* file3;
+    fopen_s(&file3, "t2.txt", "w");
+    FILE* file4;
+    fopen_s(&file4, "t2_t.txt", "w");
+    FILE* file9;
+    fopen_s(&file9, "t6_t.txt","w");
+    FILE* file10;
+    fopen_s(&file10, "t7_t.txt","w");*/
+   /* FILE* file5;
+    fopen_s(&file5, "t3.txt", "w");
+    FILE* file6;
+    fopen_s(&file6, "t3_t.txt", "w");*/
+    FILE* file11;
+    fopen_s(&file11, "t8_t.txt","w");
+    FILE* file12;
+    fopen_s(&file12, "t9_t.txt", "w") ;
    
 
-    FILE* File1;
+ /*  FILE* File1;
     fopen_s(&File1,"t10.txt", "w");
     FILE* File2;
-    fopen_s(&File2, "t10.txt", "w");
-    FILE* File3;
-    fopen_s(&File3, "t10.txt", "w");
+    fopen_s(&File2, "t10_t.txt", "w");*/
+   /*  FILE* File3;
+    fopen_s(&File3, "t11_t.txt", "w");
     FILE* File4;
-    fopen_s(&File4, "t10.txt", "w");
-    FILE* File5;
-    fopen_s(&File5, "t10.txt", "w");
+    fopen_s(&File4, "t12_t.txt", "w");*/
+   /* FILE* File5;
+    fopen_s(&File5, "t13.txt", "w");
     FILE* File6;
-    fopen_s(&File6, "t10.txt", "w");
+    fopen_s(&File6, "t13_t.txt", "w");*/
 
-    /* // Расчет линейной задачи с явной схемой
+  /*  // Расчет линейной задачи с явной схемой
 
          // Таблица 1
          calculate_linear_explicit_write_file(file1,file2,10,20);
@@ -731,13 +732,13 @@ int main(void)
          // Таблица 2
          calculate_linear_explicit_write_file_local(file7,10,20,4);
          // Таблица 3
-         calculate_linear_explicit_write_file_local(file8,100,200,4);
+         calculate_linear_explicit_write_file_local(file8,100,200,4);*/
 
 
 
-     // Расчет линейной задачи с неявной схемой
+    // Расчет линейной задачи с неявной схемой
 
-         // Таблица 1
+    /*     // Таблица 1
         calculate_linear_implicit_write_file(file3,file4,10,20,0.1);
          calculate_linear_implicit_write_file(file3,file4,100,20,0.1);
          calculate_linear_implicit_write_file(file3,file4,1000,20,0.1);
@@ -751,11 +752,11 @@ int main(void)
          // Таблица 3
          calculate_linear_implicit_write_file_local(file9,10,20,4,0.1);
          // Таблица 4
-         calculate_linear_implicit_write_file_local(file10,100,200,4,0.1);
+         calculate_linear_implicit_write_file_local(file10,100,200,4,0.1);*/
 
-         // Таблица 2
+        // Таблица 2
 
-         calculate_linear_implicit_write_file(file5,file6,10,20,1);
+        /* calculate_linear_implicit_write_file(file5, file6, 10, 20, 1);
          calculate_linear_implicit_write_file(file5,file6,100,20,1);
          calculate_linear_implicit_write_file(file5,file6,1000,20,1);
          calculate_linear_implicit_write_file(file5,file6,10,200,1);
@@ -763,16 +764,16 @@ int main(void)
          calculate_linear_implicit_write_file(file5,file6,1000,200,1);
          calculate_linear_implicit_write_file(file5,file6,10,2000,1);
          calculate_linear_implicit_write_file(file5,file6,100,2000,1);
-         calculate_linear_implicit_write_file(file5,file6,1000,2000,1);
+         calculate_linear_implicit_write_file(file5,file6,1000,2000,1);*/
 
          // Таблица 5
          calculate_linear_implicit_write_file_local(file11,10,20,4,1);
          // Таблица 6
-         calculate_linear_implicit_write_file_local(file12,100,200,4,1); */
+         calculate_linear_implicit_write_file_local(file12,100,200,4,1); 
 
-         // Расчет нелинейной задачи с явной схемой
+        // Расчет нелинейной задачи с явной схемой
 
-            // Таблица 1
+  /*      // Таблица 1
     calculate_nonlinear_explicit_write_file(File1, File2, 10, 20);
     calculate_nonlinear_explicit_write_file(File1, File2, 100, 20);
     calculate_nonlinear_explicit_write_file(File1, File2, 1000, 20);
@@ -781,23 +782,25 @@ int main(void)
     calculate_nonlinear_explicit_write_file(File1, File2, 1000, 200);
     calculate_nonlinear_explicit_write_file(File1, File2, 10, 2000);
     calculate_nonlinear_explicit_write_file(File1, File2, 100, 2000);
-    calculate_nonlinear_explicit_write_file(File1, File2, 1000, 2000);
-    // Таблица 2
+    calculate_nonlinear_explicit_write_file(File1, File2, 1000, 2000);*/
+   /*  // Таблица 2
     calculate_nonlinear_explicit_write_file_local(File3, 10, 20, 4);
     // Таблица 3
-    calculate_nonlinear_explicit_write_file_local(File4, 100, 200, 4);
+    calculate_nonlinear_explicit_write_file_local(File4, 100, 200, 4);*/
 
 
-    // // Расчет нелинейной задачи с неявной схемой
+   // // Расчет нелинейной задачи с неявной схемой
 
-   // Таблица 1
-    calculate_nonlinear_implicit_write_file(File4, File5, 10, 2000, pow(10, -9), 0.1);
-    calculate_nonlinear_implicit_write_file(File4, File5, 10, 20000, pow(10, -9), 0.1);
-    calculate_nonlinear_implicit_write_file(File4, File5, 5, 2000, pow(10, -9), 0.1);
-    calculate_nonlinear_implicit_write_file(File4, File5, 10, 10000, pow(10, -9), 0.1);
-    calculate_nonlinear_implicit_write_file(File4, File5, 5, 20000, pow(10, -9), 0.1);
-    calculate_nonlinear_implicit_write_file(File4, File5, 5, 1000, pow(10, -9), 0.1);
+  /* // Таблица 1
+    calculate_nonlinear_implicit_write_file(File5, File6, 10, 2000, pow(10, -9), 0.1);
+    calculate_nonlinear_implicit_write_file(File5, File6, 10, 20000, pow(10, -9), 0.1);
+    calculate_nonlinear_implicit_write_file(File5, File6, 5, 2000, pow(10, -9), 0.1);
+    calculate_nonlinear_implicit_write_file(File5, File6, 10, 10000, pow(10, -9), 0.1);
+    calculate_nonlinear_implicit_write_file(File5, File6, 5, 20000, pow(10, -9), 0.1);
+    calculate_nonlinear_implicit_write_file(File5, File6, 5, 1000, pow(10, -9), 0.1);*/
 
 
     return 0;
 }
+
+
