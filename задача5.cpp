@@ -286,7 +286,7 @@ int calculate_linear_implicit_write_file_local(FILE* file_table, int Ntau, int M
     double tau = 1. / Ntau;
     double nu = tau / h;
     double mu = tau / (4 * h);
-
+    //int s = 1;
     for (int i = 0; i < Mh + 1; i++)
     {
         if (-1. + i * h <= 0) { V[i] = 0.; }
@@ -311,16 +311,16 @@ int calculate_linear_implicit_write_file_local(FILE* file_table, int Ntau, int M
     }
     int Mh_tmp = Mh;
     int Ntau_tmp = Ntau;
-    int s = 1;
-    printf( "nachS= %f \n", s);
+    int s = 1.;
+    printf("nachS= %d \n", s);
 
     for (int k = 0; k < K; k++)
     {
         
         Mh_tmp = Mh_tmp * 2;
         Ntau_tmp = Ntau_tmp * 2;
-        s = s + s;
-       // fprintf(file_table, "%f \n", s);
+        s = s * 2;
+        fprintf(file_table, "%d \n", s);
         double h_tmp = 2. / Mh_tmp;
         double tau_tmp = 1. / Ntau_tmp;
         double nu_tmp = tau_tmp / h_tmp;
